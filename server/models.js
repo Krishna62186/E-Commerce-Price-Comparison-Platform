@@ -1,0 +1,7 @@
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
+const offerSchema = new Schema({ store: String, url: String, price: Number, delivery: { type: Number, default: 0 }, coupon: { code: String, amount: { type: Number, default: 0 } }, bankOffer: { name: String, amount: { type: Number, default: 0 } }, paymentOffer: { name: String, amount: { type: Number, default: 0 } }, inStock: { type: Boolean, default: true }, updatedAt: { type: Date, default: Date.now } }, { _id: true });
+const productSchema = new Schema({ title: { type: String, required: true }, brand: String, category: String, image: String, description: String, specs: [{ label: String, value: String }], offers: [offerSchema], priceHistory: [{ date: { type: Date, default: Date.now }, price: Number }], rating: { type: Number, default: 4.2 }, featured: Boolean }, { timestamps: true });
+const userSchema = new Schema({ name: String, email: { type: String, unique: true }, password: String, role: { type: String, enum: ['user', 'admin'], default: 'user' }, wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }], alerts: [{ product: { type: Schema.Types.ObjectId, ref: 'Product' }, targetPrice: Number, active: { type: Boolean, default: true } }], searches: [{ query: String, at: { type: Date, default: Date.now } }] }, { timestamps: true });
+export const Product = model('Product', productSchema);
+export const User = model('User', userSchema);
